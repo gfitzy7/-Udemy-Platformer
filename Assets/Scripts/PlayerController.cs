@@ -15,10 +15,20 @@ public class PlayerController : MonoBehaviour {
 	private Rigidbody2D myRigidbody;
 	private Animator myAnimator;
 
+	public Vector3 respawnPos;
+
+	public LevelManager levelManager;
+
+	public GameObject stompBox;
+
 	// Use this for initialization
 	void Start () {
 		myRigidbody = GetComponent<Rigidbody2D>();
 		myAnimator = GetComponent<Animator>();
+
+		respawnPos = transform.position;
+
+		levelManager = FindObjectOfType<LevelManager>();
 	}
 	
 	// Update is called once per frame
@@ -44,11 +54,35 @@ public class PlayerController : MonoBehaviour {
 
 		myAnimator.SetFloat("Speed", Mathf.Abs(myRigidbody.velocity.x));
 		myAnimator.SetBool("Grounded", isGrounded);
+
+		if(myRigidbody.velocity.y < 0){
+			stompBox.SetActive(true);
+		}
+		else{
+			stompBox.SetActive(false);
+		}
 	}
 
 	void OnTriggerEnter2D(Collider2D other) {
 		if(other.tag == "KillPlane"){
-			gameObject.SetActive(false);
+			levelManager.Respawn();
+		}
+
+		if(other.tag == "Checkpoint"){
+			respawnPos = other.transform.position;
 		}
 	}
+
+	void OnCollisionEnter2D(Collision2D other) {
+		if(other.gameObject.tag == "MovingPlatform") {
+			transform.parent = other.transform;
+		}
+	}
+
+	void OnCollisionExit2D(Collision2D other) {
+		if(other.gameObject.tag == "MovingPlatform") {
+			transform.parent = null;
+		}
+	}
+
 }
