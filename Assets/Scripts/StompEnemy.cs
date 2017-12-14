@@ -21,10 +21,13 @@ public class StompEnemy : MonoBehaviour {
 	}
 
 	void OnTriggerEnter2D(Collider2D other) {
-		if(other.tag == "Enemy") {
-			playerRigidBody.velocity = new Vector3(playerRigidBody.velocity.x, bounceForce, 0f);
-			Instantiate(deathSplosion, other.transform.position, deathSplosion.transform.rotation);
-			other.gameObject.SetActive(false);
+		if (other.tag == "Enemy") {
+			playerRigidBody.velocity = new Vector3 (playerRigidBody.velocity.x, bounceForce, 0f);
+			Instantiate (deathSplosion, other.transform.position, deathSplosion.transform.rotation);
+			other.gameObject.SetActive (false);
+		} else if (other.tag == "Boss") {
+			playerRigidBody.velocity = new Vector3 (playerRigidBody.velocity.x, bounceForce, 0f);
+			other.transform.parent.GetComponent<BossScript> ().takeDamage = true;
 		}
 	}
 }

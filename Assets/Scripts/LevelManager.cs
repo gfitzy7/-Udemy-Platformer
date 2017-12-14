@@ -39,6 +39,8 @@ public class LevelManager : MonoBehaviour {
 	public AudioSource levelMusic;
 	public AudioSource gameOverMusic;
 
+	public bool respawnCoActive;
+
 	// Use this for initialization
 	void Start () {
 		player = FindObjectOfType<PlayerController>();
@@ -94,6 +96,8 @@ public class LevelManager : MonoBehaviour {
 	}
 
 	public IEnumerator RespawnCo() {
+		respawnCoActive = true;
+
 		player.gameObject.SetActive(false);
 		currentHealth = 0;
 		UpdateHeartMeter();
@@ -104,6 +108,8 @@ public class LevelManager : MonoBehaviour {
 		Instantiate(deathSplosion, player.transform.position, deathSplosion.transform.rotation);
 
 		yield return new WaitForSeconds(respawnDelay);
+
+		respawnCoActive = false;
 
 		foreach (ResetOnRespawn obj in objectsToReset) {
 			obj.Reset();
